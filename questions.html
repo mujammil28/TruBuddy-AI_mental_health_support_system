@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Assessment</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #35A787;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #066C4F;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #28865d;
+        }
+        #result {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #066C4F;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result-title {
+            font-size: 24px;
+            color: #066C4F;
+            margin-bottom: 10px;
+        }
+        .result-text {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            });
+    </script>
+    <h1>Mental Health Assessment</h1>
+    <form id="assessmentForm">
+        <div class="question">
+            <p>1. How well have you been able to focus on your daily tasks?</p>
+            <select name="question1">
+                <option value="4">Very well</option>
+                <option value="3">Moderately well</option>
+                <option value="2">Not at all</option>
+                <option value="1">I feel overwhelmed</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>2. How often have you felt calm and peaceful?</p>
+            <select name="question2">
+                <option value="4">Always</option>
+                <option value="3">Often</option>
+                <option value="2">Sometimes</option>
+                <option value="1">Rarely</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>3. How easy has it been to handle your personal problems?</p>
+            <select name="question3">
+                <option value="4">Very easy</option>
+                <option value="3">Somewhat easy</option>
+                <option value="2">Somewhat difficult</option>
+                <option value="1">Very difficult</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>4. How much energy do you have on a daily basis?</p>
+            <select name="question4">
+                <option value="4">A lot</option>
+                <option value="3">Enough</option>
+                <option value="2">Not much</option>
+                <option value="1">None</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>5. How well do you get along with others?</p>
+            <select name="question5">
+                <option value="4">Very well</option>
+                <option value="3">Well</option>
+                <option value="2">Poorly</option>
+                <option value="1">Very poorly</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>6. How often do you feel interested in life?</p>
+            <select name="question6">
+                <option value="4">Always</option>
+                <option value="3">Often</option>
+                <option value="2">Sometimes</option>
+                <option value="1">Never</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>7. How often do you feel depressed?</p>
+            <select name="question7">
+                <option value="1">Always</option>
+                <option value="2">Often</option>
+                <option value="3">Sometimes</option>
+                <option value="4">Never</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>8. How confident are you in your abilities to accomplish your goals?</p>
+            <select name="question8">
+                <option value="4">Very confident</option>
+                <option value="3">Somewhat confident</option>
+                <option value="2">Not very confident</option>
+                <option value="1">Not confident at all</option>
+            </select>
+        </div>
+        <div class="question">
+            <p>9. What is your biggest challenge right now? (Open-ended)</p>
+            <textarea name="question9" required></textarea>
+        </div>
+        <div class="question">
+            <p>10. What makes you feel better when you are down? (Open-ended)</p>
+            <textarea name="question10" required></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div class="loader" id="loader"></div>
+    <div id="result">
+        <div class="result-title"></div>
+        <div class="result-text"></div>
+    </div>
+    <script>
+        document.getElementById('assessmentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            document.getElementById('loader').style.display = 'block';
+            document.querySelector('.result-title').textContent = '';
+            document.querySelector('.result-text').textContent = '';
+            
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => data[key] = value);
+            
+            fetch('http://127.0.0.1:5000/submit_assessment', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById('loader').style.display = 'none';
+                document.querySelector('.result-title').textContent = 'Assessment Result:';
+                document.querySelector('.result-text').textContent = result.suggestion.replace(/\*\*/g, '');
+            })
+            .catch(error => {
+                document.getElementById('loader').style.display = 'none';
+                document.querySelector('.result-title').textContent = 'Error:';
+                document.querySelector('.result-text').textContent = 'An error occurred. Please try again.';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

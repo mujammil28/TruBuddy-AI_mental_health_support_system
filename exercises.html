@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises - TRU Buddy</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #35a787;
+        }
+        #exercisesContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            width: 90vw;
+        }
+        .exercise-card {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .exercise-card h2 {
+            color: #35a787;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .exercise-card p {
+            display: none;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #f66d0a;
+            font-size: 20px;
+            transition: color 0.3s ease;
+            display:none;
+        }
+        .delete-btn:hover {
+            color: #e55c00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exercises</h1>
+    <div id="exercisesContainer">
+        <!-- Exercise Cards will be dynamically added here -->
+    </div>
+
+    <script>
+        window.onload = function() {
+            const exercisesData = JSON.parse(localStorage.getItem('exercises'));
+            const container = document.getElementById('exercisesContainer');
+
+            if (exercisesData && exercisesData.length > 0) {
+                exercisesData.forEach(exercise => {
+                    const card = document.createElement('div');
+                    card.classList.add('exercise-card');
+                    card.innerHTML = `
+                        <h2>${exercise.exercise_name}</h2>
+                        <button class="delete-btn" onclick="deleteExercise(${exercise.id}, this)"><i class="fas fa-trash-alt"></i></button>
+                    `;
+                    card.onclick = function(event) {
+                        if (event.target.closest('.delete-btn')) {
+                            return;
+                        }
+                        fetch('http://127.0.0.1:5000/exercise_details', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name: exercise.exercise_name,
+                                description: exercise.exercise_description,
+                                video: exercise.video_link
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            localStorage.setItem('currentExercise', JSON.stringify(data));
+                            window.location.href = '/exercise.html';
+                        })
+                        .catch(error => console.error('Error:', error));
+                    };
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = '<p>No exercises found for this module.</p>';
+            }
+        }
+
+        function deleteExercise(id, btn) {
+            fetch(`http://127.0.0.1:5000/delete_exercise?id=${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    btn.closest('.exercise-card').remove();
+                } else {
+                    throw new Error('Failed to delete exercise');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to delete exercise');
+            });
+        }
+    </script>
+</body>
+</html>

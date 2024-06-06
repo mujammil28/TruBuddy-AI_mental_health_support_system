@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TRU Buddy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Coiny&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("./home.png");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            overflow-y: auto;
+            font-family: "Amiko";
+        }
+
+        header {
+            padding: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .logo {
+            height: 100px;
+            width: 100px;
+        }
+
+        nav a {
+            margin: 30px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            font-size: 24px;
+            margin-right: 90px;
+        }
+
+        .auth-btn {
+            padding: 15px 30px;
+            background-color: #066c4f;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 22px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-btn:hover {
+            background-color: #28865d;
+        }
+
+        main {
+            margin-left: 190px;
+        }
+
+        .Title {
+            font-family: "Coiny", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 150px;
+            color: #066c4f;
+            margin: 0;
+            margin-top: 30px;
+            margin-bottom: 0 !important;
+            margin-block-start: 0;
+            margin-block-end: 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .Title1 {
+            font-family: "Coiny", system-ui;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 50px;
+            color: #f66d0a;
+            padding: 0;
+            margin-top: -60px;
+            margin-bottom: 90px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .welcome {
+            font-family: Amiko;
+            font-size: 32px;
+            font-weight: 400;
+            text-align: inherit;
+            margin-top: -60px;
+        }
+
+        .responsive {
+            width: 459px;
+            height: 192px;
+            top: 469px;
+            left: 129px;
+            gap: 0px;
+            opacity: 0px;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-top: 150px;
+            padding: 65px;
+            margin-right: 140px;
+        }
+
+        .card {
+            width: 300px;
+            height: 300px;
+            background-color: hsl(25, 100%, 92%);
+            border-radius: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card h3 {
+            color: #066c4f;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #f66d0a;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .card i {
+            font-size: 36px;
+            color: #f66d0a;
+            margin-bottom: 10px;
+        }
+
+        .scroll {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img class="logo" src="./logo.png" alt="Logo" />
+        <nav>
+            <a href="#">Home</a>
+            <a href="./aboutus.html">About</a>
+            <a href="./services.html">Services</a>
+            <a href="./contactus.html">Contact Us</a>
+        </nav>
+        <button class="auth-btn" id="authBtn">Register</button>
+    </header>
+
+    <main>
+        <h1 class="Title">TRU Buddy</h1>
+        <h2 class="Title1">An Emotional Companion</h2>
+        <div class="scroll">
+            <div class="responsive">
+                <p class="welcome">
+                    More than Just a Platform, Your Personal Oasis in a Hectic World. Discover Serenity Today! Join us at Tru Buddy and discover the power of connection, understanding, and growth.
+                </p>
+                <button class="auth-btn" id="exploreBtn">Explore</button>
+            </div>
+
+            <!-- Pop-up Cards -->
+            <div class="card-container">
+                <div class="card" id="chatbotCard">
+                    <i class="fas fa-robot"></i>
+                    <h3>Chatbot</h3>
+                    <p>Empowering conversations with AI</p>
+                </div>
+                <div class="card" id="therapyCard">
+                    <i class="fas fa-heart"></i>
+                    <h3>Therapy</h3>
+                    <p>Professional support for mental well-being</p>
+                </div>
+                <div class="card" id="gamesCard">
+                    <i class="fas fa-gamepad"></i>
+                    <h3>Relaxing Games</h3>
+                    <p>Fun activities to unwind and destress</p>
+                </div>
+                <div class="card" id="assessmentCard">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Mental Health Assessment</h3>
+                    <p>Evaluate and understand your mental health</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const authBtn = document.getElementById("authBtn");
+            const exploreBtn = document.getElementById("exploreBtn");
+            const authToken = localStorage.getItem('token');
+
+            if (authToken) {
+                authBtn.textContent = `Welcome, ${localStorage.getItem('username')}`;
+                authBtn.disabled = true;
+                authBtn.style.cursor = 'default';
+            } else {
+                authBtn.addEventListener("click", function () {
+                    window.location.href = "/register.html";
+                });
+            }
+
+            exploreBtn.addEventListener("click", function (event) {
+                event.preventDefault();
+                const cardContainer = document.querySelector(".card-container");
+                cardContainer.scrollIntoView({ behavior: "smooth" });
+            });
+
+            const chatbotCard = document.getElementById("chatbotCard");
+            const therapyCard = document.getElementById("therapyCard");
+            const gamesCard = document.getElementById("gamesCard");
+            const assessmentCard = document.getElementById("assessmentCard");
+
+            chatbotCard.addEventListener("click", function () {
+                if (!authToken) {
+                    window.location.href = "/register.html";
+                } else {
+                    window.location.href = "/chatbot.html";
+                }
+            });
+
+            therapyCard.addEventListener("click", function () {
+                if (!authToken) {
+                    window.location.href = "/register.html";
+                } else {
+                    window.location.href = "/therapy.html";
+                }
+            });
+
+            gamesCard.addEventListener("click", function () {
+                if (!authToken) {
+                    window.location.href = "/register.html";
+                } else {
+                    window.location.href = "/games.html";
+                }
+            });
+
+            assessmentCard.addEventListener("click", function () {
+                if (!authToken) {
+                    window.location.href = "/register.html";
+                } else {
+                    window.location.href = "/questions.html";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!-- Navbar -->
+<nav style="display:flex;background-color: #ffffff; padding: 10px 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; color: #fff;">
+        <a href="/index.html" style="text-decoration: none; color: #18bc8d; font-size: 20px;">Home</a>
+        <a onclick="logout()" style="display:none;cursor: pointer; text-decoration: none; color: #18bc8d; font-size: 20px;">Logout</a>
+    </div>
+</nav>
+
+<script>
+    function logout() {
+        // Clear local storage or session storage as per your implementation
+        localStorage.clear();
+        // Redirect to login page or home page
+        window.location.href = '/registration.html';
+    }
+</script>

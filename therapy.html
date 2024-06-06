@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Therapy - TRU Buddy</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Montserrat", sans-serif;
+        background-color: #f9f9f9;
+      }
+      header {
+        padding: 20px;
+        background-color: #35a787;
+        color: #fff;
+        text-align: center;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 80%;
+        margin-bottom: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+      .card h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #35a787;
+      }
+      .card p {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #736f6f;
+      }
+      .card .actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .view-module-btn,
+      .like-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+      .view-module-btn {
+        background-color: #35a787;
+        color: #fff;
+      }
+      .view-module-btn:hover {
+        background-color: #28865d;
+      }
+      .like-btn {
+        background-color: #f66d0a;
+        color: #fff;
+      }
+      .like-btn:hover {
+        background-color: #e55c00;
+      }
+      .like-btn i {
+        margin-right: 5px;
+      }
+      .like-btn.active {
+        background-color: #ffeaea;
+        color: #de0000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar"></div>
+    <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            });
+    </script>
+    <header>
+      <h1>Therapy - TRU Buddy</h1>
+    </header>
+
+    <div class="container">
+      <!-- Card 1 -->
+      <div class="card">
+        <h2>Managing your Anxiety</h2>
+        <div class="actions">
+          <button class="view-module-btn" onclick="viewModule('Anxiety')">
+            View Module
+          </button>
+          <button class="like-btn" onclick="toggleLike(this)">
+            <i class="fas fa-heart"></i>
+            Like
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <h2>Managing your Anger</h2>
+        <div class="actions">
+          <button class="view-module-btn" onclick="viewModule('Anger')">
+            View Module
+          </button>
+          <button class="like-btn" onclick="toggleLike(this)">
+            <i class="fas fa-heart"></i>
+            Like
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Managing Inattention and Hyperactivity</h2>
+        <div class="actions">
+          <button class="view-module-btn" onclick="viewModule('Inattention')">
+            View Module
+          </button>
+          <button class="like-btn" onclick="toggleLike(this)">
+            <i class="fas fa-heart"></i>
+            Like
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Dealing with Panic Attacks</h2>
+        <div class="actions">
+          <button class="view-module-btn" onclick="viewModule('Panic')">
+            View Module
+          </button>
+          <button class="like-btn" onclick="toggleLike(this)">
+            <i class="fas fa-heart"></i>
+            Like
+          </button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Handling Body Image Issues</h2>
+        <div class="actions">
+          <button class="view-module-btn" onclick="viewModule('Body')">
+            View Module
+          </button>
+          <button class="like-btn" onclick="toggleLike(this)">
+            <i class="fas fa-heart"></i>
+            Like
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function viewModule(moduleTitle) {
+        fetch(`http://127.0.0.1:5000/get_module_exercises?module_title=${encodeURIComponent(moduleTitle.trim())}`)
+          .then(response => response.json())
+          .then(data => {
+            localStorage.setItem('exercises', JSON.stringify(data));
+            window.location.href = '/exercises.html';
+          })
+          .catch(error => console.error("Error:", error));
+      }
+      function toggleLike(button) {
+        button.classList.toggle('active');
+      }
+    </script>
+  </body>
+</html>

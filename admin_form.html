@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dynamic Form</title>
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f9f9f9;
+        padding: 20px;
+        color: #333;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        transition: border-color 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #35a787;
+        outline: none;
+    }
+    .btn-primary {
+        background-color: #066C4F;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #28865d;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <form id="dynamic-form">
+        <div class="form-group">
+            <label for="exercise-title">Exercise Title</label>
+            <select class="form-control" id="exercise-title">
+                <option value="Anxiety">Managing your Anxiety</option>
+                <option value="Anger">Managing your Anger</option>
+                <option value="Inattention">Managing Inattention and Hyperactivity</option>
+                <option value="Panic">Dealing with Panic Attacks</option>
+                <option value="Body">Handling Body Image Issues</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="exercise-name">Exercise Name</label>
+            <input type="text" class="form-control" id="exercise-name" placeholder="Enter exercise name">
+        </div>
+        <div class="form-group">
+            <label for="exercise-description">Exercise Description</label>
+            <textarea class="form-control" id="exercise-description" rows="3" placeholder="Enter exercise description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="video-link">Video Link</label>
+            <input type="text" class="form-control" id="video-link" placeholder="Enter video link">
+        </div>
+        <button id="submit-btn" type="submit" class="btn btn-primary">Submit</button>
+        
+    </form>
+</div>
+<script>
+    document.getElementById('dynamic-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        // Validation logic
+        const exerciseTitle = document.getElementById("exercise-title").value;
+        const exerciseName = document.getElementById("exercise-name").value;
+        const exerciseDescription = document.getElementById("exercise-description").value;
+        const videoLink = document.getElementById("video-link").value;
+
+        if (!exerciseTitle || !exerciseName || !exerciseDescription || !videoLink) {
+            alert('Please fill in all fields before submitting.');
+            return;
+        }
+
+        // Submit data if validation passes
+        try {
+            const response = await fetch("http://127.0.0.1:5000/save_exercise_data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "exercise_title": exerciseTitle,
+                    "exercise_name": exerciseName,
+                    "exercise_description": exerciseDescription,
+                    "video_link": videoLink
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                alert('Form has been submitted successfully!');
+                document.getElementById("success-btn").style.display = "block";
+            } else {
+                throw new Error('Network response was not ok.');
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+</script>
+</body>
+</html>

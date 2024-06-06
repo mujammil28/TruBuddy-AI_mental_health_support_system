@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Relaxing Games</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        h1 {
+            color: #35A787;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 15px;
+            background-color: #066C4F;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            color: #fff;
+            font-size: 1.2em;
+            text-align: center;
+            width: 150px;
+        }
+        li:hover {
+            background-color: #28865d;
+            transform: scale(1.05);
+        }
+        .game-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .game-container h2 {
+            color: #35A787;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .tile {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #066C4F;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 5px;
+        }
+        .tile:hover {
+            background-color: #28865d;
+        }
+        .empty {
+            background-color: #f9f9f9;
+            cursor: default;
+        }
+        .hint-button, .check-button {
+            display: inline-block;
+            margin: 10px 20px;
+            padding: 10px 20px;
+            background-color: #066C4F;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .hint-button:hover, .check-button:hover {
+            background-color: #28865d;
+            transform: scale(1.05);
+        }
+        .message {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #f66d0a;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid #ccc;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        input[type="text"] {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 1.2em;
+            font-family: 'Montserrat', sans-serif;
+            background-color: transparent;
+        }
+        .sudoku-cell {
+            font-size: 1.2em;
+        }
+        .top-border {
+            border-top: 3px solid #000;
+        }
+        .bottom-border {
+            border-bottom: 3px solid #000;
+        }
+        .left-border {
+            border-left: 3px solid #000;
+        }
+        .right-border {
+            border-right: 3px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            });
+    </script>
+    <h1>Choose a Mind Relaxing Game</h1>
+    <ul>
+        <li onclick="playGame('Sudoku')">Sudoku</li>
+        <li onclick="playGame('Jigsaw Puzzle')">Jigsaw Puzzle</li>
+    </ul>
+
+    <div id="Sudoku" class="game-container">
+        <h2>Sudoku</h2>
+        <table id="sudoku-table"></table>
+        <button class="hint-button" onclick="provideHint()">Hint</button>
+        <button class="check-button" onclick="checkCompletion()">Check</button>
+        <div id="message" class="message"></div>
+    </div>
+
+    <div id="Jigsaw Puzzle" class="game-container">
+        <h2>Jigsaw Puzzle</h2>
+        <div id="jigsaw-container" class="puzzle-container"></div>
+        <button class="hint-button" onclick="provideJigsawHint()">Hint</button>
+        <button class="check-button" onclick="checkJigsawCompletion()">Check</button>
+        <div id="jigsaw-message" class="message"></div>
+    </div>
+
+    <script>
+        function playGame(gameName) {
+            const games = document.querySelectorAll('.game-container');
+            games.forEach(game => game.style.display = 'none');
+            document.getElementById(gameName).style.display = 'block';
+
+            if (gameName === 'Sudoku') {
+                startSudoku();
+            } else if (gameName === 'Jigsaw Puzzle') {
+                startJigsawPuzzle();
+            }
+        }
+
+        // Sudoku game
+        function startSudoku() {
+            const sudoku = new Sudoku();
+            sudoku.generateSudoku();
+            window.sudoku = sudoku; // Store the instance globally for hint function
+            sudoku.renderSudoku();
+        }
+
+        function provideHint() {
+            window.sudoku.provideHint();
+            window.sudoku.renderSudoku();
+        }
+
+        function checkCompletion() {
+            const messageDiv = document.getElementById('message');
+            if (window.sudoku.isCompletedCorrectly()) {
+                messageDiv.textContent = "Congratulations! You have successfully completed the Sudoku puzzle!";
+                messageDiv.style.color = "#35A787";
+            } else {
+                messageDiv.textContent = "There are errors in the Sudoku puzzle. Please check your input.";
+                messageDiv.style.color = "#f66d0a";
+            }
+        }
+
+        class Sudoku {
+            constructor() {
+                this.grid = Array.from({ length: 9 }, () => Array(9).fill(' '));
+                this.solution = null;
+            }
+
+            printSudoku() {
+                console.log(" - - - - - - - - - - - - - - -");
+                for (let i = 0; i < this.grid.length; i++) {
+                    if (i !== 0 && i % 3 === 0) {
+                        console.log(" - - - - - - - - - - - - - - -");
+                    }
+                    let string = "";
+                    for (let j = 0; j < this.grid[i].length; j++) {
+                        if (j % 3 === 0) {
+                            string += "|";
+                        }
+                        string += " " + this.grid[i][j] + " ";
+                    }
+                    console.log(string + "|");
+                }
+                console.log(" - - - - - - - - - - - - - - -");
+            }
+
+            rowCheck(row, value) {
+                return this.grid[row].includes(value);
+            }
+
+            colCheck(col, value) {
+                return this.grid.some(row => row[col] === value);
+            }
+
+            subgrid(row, col, value) {
+                const startRow = row - (row % 3);
+                const startCol = col - (col % 3);
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        if (this.grid[startRow + i][startCol + j] === value) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            isValid(row, col, value) {
+                return !this.rowCheck(row, value) &&
+                    !this.colCheck(col, value) &&
+                    !this.subgrid(row, col, value);
+            }
+
+            solveSudoku(grid = this.grid) {
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        if (grid[row][col] === ' ') {
+                            for (let num = 1; num <= 9; num++) {
+                                if (this.isValid(row, col, num.toString())) {
+                                    grid[row][col] = num.toString();
+                                    if (this.solveSudoku(grid)) {
+                                        return true;
+                                    }
+                                    grid[row][col] = ' ';
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            generateSudoku() {
+                // Fill the first row with random, unique values from 1 to 9
+                let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                for (let i = 0; i < 9; i++) {
+                    let randomIndex = Math.floor(Math.random() * numbers.length);
+                    this.grid[0][i] = numbers.splice(randomIndex, 1)[0].toString();
+                }
+                this.solveSudoku(this.grid);
+                this.solution = this.grid.map(row => row.slice()); // Save the solution
+                // Remove some values to create a puzzle
+                for (let i = 0; i < 40; i++) {
+                    let row = Math.floor(Math.random() * 9);
+                    let col = Math.floor(Math.random() * 9);
+                    this.grid[row][col] = ' ';
+                }
+            }
+
+            renderSudoku() {
+                const table = document.getElementById('sudoku-table');
+                table.innerHTML = '';
+                for (let i = 0; i < 9; i++) {
+                    const row = document.createElement('tr');
+                    for (let j = 0; j < 9; j++) {
+                        const cell = document.createElement('td');
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = 1;
+                        input.value = this.grid[i][j] === ' ' ? '' : this.grid[i][j];
+                        input.className = 'sudoku-cell';
+                        if (this.grid[i][j] !== ' ') {
+                            input.disabled = true;
+                        } else {
+                            input.addEventListener('input', (event) => this.validateInput(event, i, j));
+                        }
+
+                        // Add thick borders for 3x3 subgrids
+                        if (i % 3 === 0) {
+                            cell.classList.add('top-border');
+                        }
+                        if (i % 3 === 2) {
+                            cell.classList.add('bottom-border');
+                        }
+                        if (j % 3 === 0) {
+                            cell.classList.add('left-border');
+                        }
+                        if (j % 3 === 2) {
+                            cell.classList.add('right-border');
+                        }
+
+                        cell.appendChild(input);
+                        row.appendChild(cell);
+                    }
+                    table.appendChild(row);
+                }
+            }
+
+            validateInput(event, row, col) {
+                const value = event.target.value;
+                const messageDiv = document.getElementById('message');
+
+                if (value < 1 || value > 9 || !/^[1-9]$/.test(value)) {
+                    messageDiv.textContent = "Please enter a number between 1 and 9.";
+                    messageDiv.style.color = "#f66d0a";
+                    event.target.value = '';
+                    return;
+                }
+
+                if (!this.isValid(row, col, value)) {
+                    messageDiv.textContent = "This number is not valid in this position.";
+                    messageDiv.style.color = "#f66d0a";
+                    event.target.value = '';
+                } else {
+                    messageDiv.textContent = "";
+                    this.grid[row][col] = value;
+                }
+            }
+
+            provideHint() {
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        if (this.grid[row][col] === ' ') {
+                            this.grid[row][col] = this.solution[row][col];
+                            return;
+                        }
+                    }
+                }
+            }
+
+            isCompletedCorrectly() {
+                for (let row = 0; row < 9; row++) {
+                    for (let col = 0; col < 9; col++) {
+                        if (this.grid[row][col] === ' ' || this.grid[row][col] !== this.solution[row][col]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        // Jigsaw Puzzle game
+        function startJigsawPuzzle() {
+            const jigsaw = new JigsawPuzzle();
+            jigsaw.generateJigsawPuzzle();
+            window.jigsaw = jigsaw; // Store the instance globally for hint function
+            jigsaw.renderJigsawPuzzle();
+        }
+
+        function provideJigsawHint() {
+            window.jigsaw.provideHint();
+            window.jigsaw.renderJigsawPuzzle();
+        }
+
+        function checkJigsawCompletion() {
+            const messageDiv = document.getElementById('jigsaw-message');
+            if (window.jigsaw.isCompletedCorrectly()) {
+                messageDiv.textContent = "Congratulations! You have successfully completed the Jigsaw Puzzle!";
+                messageDiv.style.color = "#35A787";
+            } else {
+                messageDiv.textContent = "There are errors in the Jigsaw Puzzle. Please check your input.";
+                messageDiv.style.color = "#f66d0a";
+            }
+        }
+
+        class JigsawPuzzle {
+            constructor() {
+                this.size = 3; // 3x3 puzzle
+                this.pieces = [...Array(this.size * this.size - 1).keys()].map(n => (n + 1).toString());
+                this.pieces.push(''); // empty piece
+                this.solution = this.pieces.slice();
+                this.grid = [];
+            }
+
+            generateJigsawPuzzle() {
+                do {
+                    this.grid = this.pieces.sort(() => Math.random() - 0.5);
+                } while (!this.isSolvable() || this.isCompletedCorrectly());
+            }
+
+            renderJigsawPuzzle() {
+                const container = document.getElementById('jigsaw-container');
+                container.innerHTML = '';
+                this.grid.forEach((piece, index) => {
+                    const pieceElement = document.createElement('div');
+                    pieceElement.className = 'tile';
+                    if (piece === '') {
+                        pieceElement.classList.add('empty');
+                    } else {
+                        pieceElement.textContent = piece;
+                        pieceElement.addEventListener('click', () => this.moveTile(index));
+                    }
+                    container.appendChild(pieceElement);
+                });
+            }
+
+            moveTile(index) {
+                const emptyIndex = this.grid.indexOf('');
+                const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - this.size, emptyIndex + this.size];
+                if (validMoves.includes(index) && !(index % this.size === 0 && emptyIndex % this.size === this.size - 1) && !(index % this.size === this.size - 1 && emptyIndex % this.size === 0)) {
+                    [this.grid[emptyIndex], this.grid[index]] = [this.grid[index], this.grid[emptyIndex]];
+                    this.renderJigsawPuzzle();
+                }
+            }
+
+            isSolvable() {
+                const invCount = this.grid.reduce((count, current, i, arr) =>
+                    count + arr.slice(i + 1).filter(item => item && item < current).length, 0);
+                return invCount % 2 === 0;
+            }
+
+            provideHint() {
+                this.grid = this.solution.slice();
+            }
+
+            isCompletedCorrectly() {
+                return this.grid.every((piece, index) => piece === this.solution[index]);
+            }
+        }
+    </script>
+</body>
+</html>

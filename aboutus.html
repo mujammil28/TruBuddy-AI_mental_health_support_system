@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - TRU Buddy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiko:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Amiko', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        nav {
+            background-color: #35A787;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .logout-btn {
+            background-color: #F66D0A;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .logout-btn:hover {
+            background-color: #e55c00;
+        }
+        .container {
+            font-size: x-large;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #35A787;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            justify-content: space-evenly;
+            align-items: center;
+            justify-items: first baseline;
+        }
+        .content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .text-section {
+            flex: 1;
+            padding-right: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px;
+        }
+        .text-section h1 {
+            color: #35A787;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .text-section p {
+            font-size: 21px;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .text-section button {
+            background-color: #35A787;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .text-section button:hover {
+            background-color: #28865d;
+        }
+        .image-section img {
+            max-width: 75%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar').innerHTML = data;
+            });
+    </script>
+    <div class="container">
+        <h1>About Us</h1>
+        <div class="content">
+            <div class="text-section">
+                <p>Welcome to Tru Buddy, your trusted companion for mental wellness. At Tru Buddy, we believe in the power of compassionate support and understanding when it comes to mental health. Our journey began with a simple yet profound goal: to create a safe and supportive space where individuals can freely express their emotions, seek guidance, and find solace.</p>
+                <p>Join us at Tru Buddy and discover the power of connection, understanding, and growth. Together, we can foster a community where everyone feels valued, supported, and empowered to prioritize their mental well-being.</p>
+            </div>
+            <div class="image-section">
+                <img src="Rectangle 63.png" alt="About Us Image">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
